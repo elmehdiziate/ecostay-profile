@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoStay - Sustainability Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #424242;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 40px;
+            color: #4CAF50;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .username {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .user-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin: 20px auto;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #E8F5E9;
+            font-size: 50px;
+            color: #4CAF50;
+        }
+        
+        .points-badge {
+            background-color: #E8F5E9;
+            color: #4CAF50;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .level-name {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 0 0 10px 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 20px 0 40px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            padding: 15px;
+            min-width: 150px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: #757575;
+        }
+        
+        .development-notice {
+            background-color: #FFF8E1;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            border-left: 5px solid #FFC107;
+            text-align: center;
+        }
+        
+        .development-notice h3 {
+            color: #F57C00;
+            margin-bottom: 10px;
+        }
+        
+        .development-notice p {
+            margin-bottom: 10px;
+        }
+        
+        .contact-info {
+            font-weight: bold;
+            color: #424242;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #757575;
+            font-size: 0.9rem;
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #E0E0E0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 75%; /* This would be dynamic based on actual progress */
+            border-radius: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .stats-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat-item {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .username {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">♻️</div>
+            <h1>EcoStay</h1>
+            <div class="user-photo">👤</div>
+            <div class="username" id="displayUsername">Guest</div>
+            <div class="points-badge" id="displayPoints">⭐ 0 Points</div>
+            <div class="level-name" id="displayLevel">Level: Eco Beginner</div>
+        </header>
+        
+        <div class="main-content">
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalPoints">0</div>
+                    <div class="stat-label">Total Points</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="carbonSaved">0.0</div>
+                    <div class="stat-label">kg CO₂ Saved</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="waterSaved">0</div>
+                    <div class="stat-label">Liters Water Saved</div>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span id="currentLevel">Eco Beginner</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+                <div class="progress-label">
+                    <span>Current Level</span>
+                    <span id="nextLevel">Eco Explorer</span>
+                </div>
+            </div>
+            
+            <div class="development-notice">
+                <h3>🚧 App Under Development 🚧</h3>
+                <p>Thank you for scanning our QR code! The EcoStay mobile app is currently under development.</p>
+                <p>We're working hard to bring you an amazing sustainable hotel experience.</p>
+                <p>Stay tuned for updates and thank you for your interest in sustainability!</p>
+                <p class="contact-info">Contact us: ecostay@example.com</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 EcoStay - Sustainable Hotel Experience</p>
+            <p>Making a difference, one stay at a time.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Parse URL parameters
+        function getUrlParams() {
+            const urlParams = {};
+            const queryString = window.location.search.slice(1);
+            const pairs = queryString.split('&');
+            
+            pairs.forEach(pair => {
+                const [key, value] = pair.split('=');
+                if (key && value) {
+                    urlParams[decodeURIComponent(key)] = decodeURIComponent(value);
+                }
+            });
+            
+            return urlParams;
+        }
+        
+        // Calculate level based on points
+        function calculateLevel(points) {
+            let level = 'Eco Beginner';
+            let progress = 0;
+            let nextLevel = 'Eco Explorer';
+            
+            if (points >= 751) {
+                level = 'Earth Guardian';
+                nextLevel = 'Max Level';
+                progress = 100;
+            } else if (points >= 501) {
+                level = 'Sustainability Champion';
+                nextLevel = 'Earth Guardian';
+                progress = (points - 501) / 250 * 100;
+            } else if (points >= 251) {
+                level = 'Eco Warrior';
+                nextLevel = 'Sustainability Champion';
+                progress = (points - 251) / 250 * 100;
+            } else if (points >= 101) {
+                level = 'Eco Explorer';
+                nextLevel = 'Eco Warrior';
+                progress = (points - 101) / 150 * 100;
+            } else {
+                progress = points / 100 * 100;
+            }
+            
+            return { level, nextLevel, progress };
+        }
+        
+        // Update UI with user data
+        function updateUI(userData) {
+            // Display username
+            document.getElementById('displayUsername').textContent = userData.username || 'Guest';
+            
+            // Display points
+            const points = parseInt(userData.points) || 0;
+            document.getElementById('displayPoints').textContent = `⭐ ${points} Points`;
+            document.getElementById('totalPoints').textContent = points;
+            
+            // Update carbon and water saved if available
+            if (userData.carbonSaved) {
+                document.getElementById('carbonSaved').textContent = parseFloat(userData.carbonSaved).toFixed(1);
+            }
+            if (userData.waterSaved) {
+                document.getElementById('waterSaved').textContent = parseInt(userData.waterSaved) || 0;
+            }
+            
+            // Calculate and update level
+            const { level, nextLevel, progress } = calculateLevel(points);
+            document.getElementById('displayLevel').textContent = `Level: ${level}`;
+            document.getElementById('currentLevel').textContent = level;
+            document.getElementById('nextLevel').textContent = nextLevel;
+            document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get data from URL parameters
+            const urlParams = getUrlParams();
+            
+            // If we have URL parameters, use them
+            if (Object.keys(urlParams).length > 0) {
+                updateUI({
+                    username: urlParams.username || urlParams.un,
+                    points: urlParams.points || urlParams.pt,
+                    carbonSaved: urlParams.carbonSaved,
+                    waterSaved: urlParams.waterSaved
+                });
+            } else {
+                // Try to parse from hash fragment (for QR codes with limited capacity)
+                try {
+                    const hashData = window.location.hash.slice(1);
+                    if (hashData) {
+                        const userData = JSON.parse(decodeURIComponent(hashData));
+                        updateUI(userData);
+                    }
+                } catch (e) {
+                    console.error('Error parsing hash data:', e);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
