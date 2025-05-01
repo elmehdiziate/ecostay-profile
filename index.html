@@ -259,20 +259,30 @@
     </div>
 
     <script>
-        // Parse URL parameters
-        function getUrlParams() {
-            const urlParams = {};
-            const queryString = window.location.search.slice(1);
-            const pairs = queryString.split('&');
-            
-            pairs.forEach(pair => {
-                const [key, value] = pair.split('=');
-                if (key && value) {
-                    urlParams[decodeURIComponent(key)] = decodeURIComponent(value);
+        // Parse data from URL
+        function parseUserData() {
+            // Check for URL hash (fragment) first - this is how the QR code passes data
+            if (window.location.hash) {
+                try {
+                    // Parse JSON data from hash fragment
+                    const hashData = decodeURIComponent(window.location.hash.substring(1));
+                    return JSON.parse(hashData);
+                } catch (error) {
+                    console.error('Error parsing hash data:', error);
                 }
-            });
+            }
             
-            return urlParams;
+            // Fallback to URL parameters (query string)
+            const urlParams = new URLSearchParams(window.location.search);
+            const userData = {};
+            
+            // Check for both full names and short names
+            userData.username = urlParams.get('username') || urlParams.get('un') || 'Guest';
+            userData.points = parseInt(urlParams.get('points') || urlParams.get('pt') || '0');
+            userData.carbonSaved = parseFloat(urlParams.get('carbonSaved') || urlParams.get('co2') || '0');
+            userData.waterSaved = parseInt(urlParams.get('waterSaved') || urlParams.get('h2o') || '0');
+            
+            return userData;
         }
         
         // Calculate level based on points
@@ -301,60 +311,54 @@
                 progress = points / 100 * 100;
             }
             
-            return { level, nextLevel, progress };
+            return { level, nextLevel, progress: Math.round(progress) };
         }
         
         // Update UI with user data
         function updateUI(userData) {
-            // Display username
-            document.getElementById('displayUsername').textContent = userData.username || 'Guest';
+            console.log('Updating UI with user data:', userData);
             
-            // Display points
-            const points = parseInt(userData.points) || 0;
+            // Display username (un parameter from QR code or username)
+            document.getElementById('displayUsername').textContent = userData.username || userData.un || 'Guest';
+            
+            // Display points (pt parameter from QR code or points)
+            const points = parseInt(userData.points || userData.pt || 0);
             document.getElementById('displayPoints').textContent = `⭐ ${points} Points`;
             document.getElementById('totalPoints').textContent = points;
             
             // Update carbon and water saved if available
-            if (userData.carbonSaved) {
-                document.getElementById('carbonSaved').textContent = parseFloat(userData.carbonSaved).toFixed(1);
-            }
-            if (userData.waterSaved) {
-                document.getElementById('waterSaved').textContent = parseInt(userData.waterSaved) || 0;
-            }
+            // Look for both full names and shorthand names from QR code
+            const carbonSaved = parseFloat(userData.carbonSaved || userData.co2 || 0).toFixed(1);
+            document.getElementById('carbonSaved').textContent = carbonSaved;
+            
+            const waterSaved = parseInt(userData.waterSaved || userData.h2o || 0);
+            document.getElementById('waterSaved').textContent = waterSaved;
             
             // Calculate and update level
             const { level, nextLevel, progress } = calculateLevel(points);
             document.getElementById('displayLevel').textContent = `Level: ${level}`;
             document.getElementById('currentLevel').textContent = level;
             document.getElementById('nextLevel').textContent = nextLevel;
-            document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
+            document.getElementById('progressPercent').textContent = `${progress}%`;
             document.getElementById('progressBar').style.width = `${progress}%`;
         }
         
-        // Initialize page
+        // Initialize page when loaded
         document.addEventListener('DOMContentLoaded', function() {
-            // Get data from URL parameters
-            const urlParams = getUrlParams();
+            // Get data from URL or hash fragment
+            const userData = parseUserData();
+            console.log('Parsed user data:', userData);
             
-            // If we have URL parameters, use them
-            if (Object.keys(urlParams).length > 0) {
-                updateUI({
-                    username: urlParams.username || urlParams.un,
-                    points: urlParams.points || urlParams.pt,
-                    carbonSaved: urlParams.carbonSaved,
-                    waterSaved: urlParams.waterSaved
-                });
+            // Update the UI
+            updateUI(userData);
+            
+            // Log the source of data for debugging
+            if (window.location.hash) {
+                console.log('Data source: URL hash fragment');
+            } else if (window.location.search) {
+                console.log('Data source: URL query parameters');
             } else {
-                // Try to parse from hash fragment (for QR codes with limited capacity)
-                try {
-                    const hashData = window.location.hash.slice(1);
-                    if (hashData) {
-                        const userData = JSON.parse(decodeURIComponent(hashData));
-                        updateUI(userData);
-                    }
-                } catch (e) {
-                    console.error('Error parsing hash data:', e);
-                }
+                console.log('No data found in URL, using defaults');
             }
         });
     </script>
